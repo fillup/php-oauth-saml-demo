@@ -1,0 +1,6 @@
+{
+    "require": {
+        "yiisoft/yii": "1.1.*",
+        "guzzle/guzzle": "~3.7"
+    }
+}
