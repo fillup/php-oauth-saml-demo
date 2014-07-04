@@ -76,7 +76,7 @@ $config = array (
 	 * metadata listing and diagnostics pages.
 	 * You can also put a hash here; run "bin/pwgen.php" to generate one.
 	 */
-	'auth.adminpassword'		=> '123',
+	'auth.adminpassword'		=> 'pass123',
 	'admin.protectindexpage'	=> false,
 	'admin.protectmetadata'		=> false,
 
@@ -206,11 +206,11 @@ $config = array (
 	 * one of the functionalities below, but in some cases you could run multiple functionalities.
 	 * In example when you are setting up a federation bridge.
 	 */
-	'enable.saml20-idp'		=> false,
+	'enable.saml20-idp'		=> true,
 	'enable.shib13-idp'		=> false,
 	'enable.adfs-idp'		=> false,
 	'enable.wsfed-sp'		=> false,
-	'enable.authmemcookie' => false,
+	'enable.authmemcookie'  => false,
 
 
 	/*
