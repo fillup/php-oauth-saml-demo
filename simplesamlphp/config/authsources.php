@@ -17,7 +17,7 @@ $config = array(
 
 		// The entity ID of this SP.
 		// Can be NULL/unset, in which case an entity ID is generated based on the metadata URL.
-		'entityID' => NULL,
+		'entityID' => null,
 
 		// The entity ID of the IdP this should SP should contact.
 		// Can be NULL/unset, in which case the user will be shown a list of available IdPs.
@@ -28,6 +28,25 @@ $config = array(
 		'discoURL' => NULL,
 
 	),
+
+    'oauth-sp' => array(
+        'saml:SP',
+
+        // The entity ID of this SP.
+        // Can be NULL/unset, in which case an entity ID is generated based on the metadata URL.
+        'entityID' => "http://oauth.local/simplesaml/module.php/saml/sp/metadata.php/oauth-sp",
+
+        // The entity ID of the IdP this should SP should contact.
+        // Can be NULL/unset, in which case the user will be shown a list of available IdPs.
+        'idp' => "http://saml.local/saml2/idp/metadata.php",
+
+        // The URL to the discovery service.
+        // Can be NULL/unset, in which case a builtin discovery service will be used.
+        'discoURL' => NULL,
+
+        'NameIDFormat' => 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent',
+
+    ),
 
 
 	/*

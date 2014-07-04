@@ -2,3 +2,4 @@ atlassian-ide-plugin.xml
 .idea/
 .vagrant/
 vendor/
+oauth2.txt
