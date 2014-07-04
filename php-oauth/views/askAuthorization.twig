@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="HandheldFriendly" content="true" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>Authorization</title>
+  <link rel="stylesheet" type="text/css" href="css/default.css">
+</head>
+
+<body>
+    <div id="wrapper">
+      {% if serviceLogoUri %}
+        <img id="headerLogo" src="{{ serviceLogoUri|e }}" width="{{ serviceLogoWidth|e }}" height="{{ serviceLogoHeight|e }}" />
+      {% endif %}
+      <div id="header">
+        <h1>{{ serviceName|e }}</h1>
+        <span id="userInfo">Logged in as <strong>{{ resourceOwnerId|e }}</strong></span>
+      </div>
+      <div id="container">
+        <div class="authorizeMessage">
+            <div id="clientInfo">
+                {% if clientIcon %}
+                    <img src="{{ clientIcon|e }}" width="128" height="128" />
+                {% endif %}
+                <div class="clientDetails">
+                    <h3 title="{{ clientId|e }}">{{ clientName|e }}</h3>
+                    <em>{{ clientDescription|e }}</em>
+                </div> <!-- /clientDetails -->
+            </div> <!-- /clientInfo -->
+
+            <div id="clientScope">
+              <strong>This application wants access to:</strong>
+              <ul>
+                  {% for scope in scopes %}
+                    <li>{{ scope|e }}</li>
+                  {% endfor %}
+              </ul>
+            </div>
+        </div> <!-- /authorizeMessage -->
+
+        {% if not sslEnabled %}
+            <div class="warnBox">
+                <strong>INSECURE</strong> connection to this service, SSL or TLS <strong>MUST</strong> be used!
+                {% if contactEmail %}
+                    Please <a href="mailto:{{ contactEmail|e }}">inform</a> the application provider.
+                {% endif %}
+            </div>
+        {% endif %}
+
+        <form method="post" action="">
+            <button type="submit" name="approval" value="reject">Reject</button>
+            <button type="submit" name="approval" value="approve">Approve</button>
+        </form>
+      </div><!-- /container -->
+  </div><!-- /wrapper -->
+</body>
+</html>

@@ -21,7 +21,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
          # the path on the host to the actual folder. The second argument is
          # the path on the guest to mount the folder. And the optional third
          # argument is a set of non-required options.
-         saml.vm.synced_folder "../simplesamlphp/", "/var/www/simplesamlphp"
+         saml.vm.synced_folder "../simplesamlphp/", "/var/www/simplesamlphp", owner: "apache", group: "apache"
 
          # Provisioning script
          saml.vm.provision :shell, :path => "provision-saml.sh"
@@ -39,7 +39,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         # the path on the host to the actual folder. The second argument is
         # the path on the guest to mount the folder. And the optional third
         # argument is a set of non-required options.
-        oauth.vm.synced_folder "../php-oauth/", "/var/www/simpleoauthphp"
+        oauth.vm.synced_folder "../php-oauth/", "/var/www/php-oauth", owner: "apache", group: "apache"
 
         # Provisioning script
         oauth.vm.provision :shell, :path => "provision-oauth.sh"
