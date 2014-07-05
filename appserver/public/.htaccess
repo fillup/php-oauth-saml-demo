@@ -1,6 +1,10 @@
 <IfModule mod_rewrite.c>
     RewriteEngine on
 
+    # Fix to add $_SERVER['HTTP_AUTHORIZATION']
+    RewriteCond %{HTTP:Authorization} ^(.+)$
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
     # if a directory or a file exists, use it directly
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
