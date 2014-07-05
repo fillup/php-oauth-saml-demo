@@ -27,6 +27,10 @@ class ApiController extends Controller
         ));
     }
 
+    public function actionTokenInfo()
+    {
+        $this->returnJson($this->getToken());
+    }
 
     public function actionDocuments()
     {
@@ -103,8 +107,10 @@ class ApiController extends Controller
                 $this->returnError(new \Exception($e->getMessage(), 400), 400);
             }
 
+            $filterChain->run();
+
         } else {
-            $e = new \Exception('Invalid API Token',403);
+            $e = new \Exception('Missing Authorization header containing Bearer token',403);
             $this->returnError($e,403);
         }
     }

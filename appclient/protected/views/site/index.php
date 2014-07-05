@@ -4,6 +4,14 @@
 $this->pageTitle=Yii::app()->name;
 ?>
 
+<?php if(Yii::app()->user->hasFlash('danger')): ?>
+
+    <div class="flash-error">
+        <?php echo Yii::app()->user->getFlash('danger'); ?>
+    </div>
+
+<?php endif; ?>
+
 <h1>Welcome to <i><?php echo CHtml::encode(Yii::app()->name); ?></i></h1>
 
 <p>Congratulations! You have successfully created your Yii application.</p>

@@ -39,7 +39,7 @@ else
     echo "Updating hosts file..."
     sudo echo "192.168.55.11 oauth.local" >> /etc/hosts
     sudo echo "192.168.55.10 saml.local" >> /etc/hosts
-    sudo echo "127.0.0.1 demo.local" >> /etc/hosts
+    sudo echo "127.0.0.1 demo.local appclient.local appserver.local" >> /etc/hosts
 fi
 
 # Retrieve the composer dependencies.

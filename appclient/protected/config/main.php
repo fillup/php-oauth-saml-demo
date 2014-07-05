@@ -35,6 +35,7 @@ return array(
 		'user'=>array(
 			// enable cookie-based authentication
 			'allowAutoLogin'=>true,
+            'loginUrl' => '/auth/login',
 		),
 		// uncomment the following to enable URLs in path-format
 		'urlManager'=>array(
@@ -86,5 +87,14 @@ return array(
 	'params'=>array(
 		// this is used in contact page
 		'adminEmail'=>'webmaster@example.com',
+        'oauth' => array(
+            'client_id' => 'appclient',
+            'client_secret' => 'crazysecret',
+            'return_path' => 'auth/return',
+            'scope' => 'profile documents tokeninfo',
+            'auth_url' => 'http://oauth.local/authorize.php',
+            'token_url' => 'http://oauth.local/token.php',
+            'api_url' => 'http://appserver.local/api',
+        ),
 	),
 );

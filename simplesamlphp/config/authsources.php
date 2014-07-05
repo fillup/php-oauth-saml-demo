@@ -82,6 +82,7 @@ $config = array(
 		'user1:pass1' => array(
 			'uid' => array('user1'),
 			'eduPersonAffiliation' => array('member', 'person'),
+            'eduPersonEntitlement' => array("urn:x-oauth:entitlement:applications", "urn:x-oauth:entitlement:administration"),
 		),
 		'user2:pass2' => array(
 			'uid' => array('user2'),
