@@ -20,37 +20,58 @@ class ApiController extends Controller
 
     public function actionProfile()
     {
-        $this->returnJson(array(
-            'name' => 'testing',
-            'email' => 'testing@test.com',
-            'token' => $this->getToken(),
-        ));
+        if($this->hasScope('profile')){
+            $this->returnJson(array(
+                'name' => 'testing',
+                'email' => 'testing@test.com',
+            ));
+        } else {
+            $this->returnError(new \Exception('You do not have the required scope: profile.',403),403);
+        }
     }
 
     public function actionTokenInfo()
     {
-        $this->returnJson($this->getToken());
+        if($this->hasScope('tokeninfo')){
+            $this->returnJson($this->getToken());
+        } else {
+            $this->returnError(new \Exception('You do not have the required scope: tokeninfo.',403),403);
+        }
     }
 
     public function actionDocuments()
     {
-        $this->returnJson(array(
-            'name' => 'testing',
-            'email' => 'testing@test.com',
-            'documents' => array(
-                '1' => array(
-                    'name' => 'Document 1',
-                    'type' => 'PDF',
-                    'last_modified' => date('Y-m-d H:i:s',time()-60*60*24*3),
+        if($this->hasScope('documents')){
+            $this->returnJson(array(
+                'name' => 'testing',
+                'email' => 'testing@test.com',
+                'documents' => array(
+                    '1' => array(
+                        'name' => 'Document 1',
+                        'type' => 'PDF',
+                        'last_modified' => date('Y-m-d H:i:s',time()-60*60*24*3),
+                    ),
+                    '2' => array(
+                        'name' => 'Document 2',
+                        'type' => 'DOCX',
+                        'last_modified' => date('Y-m-d H:i:s',time()-60*60*24*5),
+                    ),
                 ),
-                '2' => array(
-                    'name' => 'Document 2',
-                    'type' => 'DOCX',
-                    'last_modified' => date('Y-m-d H:i:s',time()-60*60*24*5),
-                ),
-            ),
-            'token' => $this->getToken(),
-        ));
+            ));
+        } else {
+            $this->returnError(new \Exception('You do not have the required scope: documents.',403),403);
+        }
+    }
+
+    public function actionNotAllowed()
+    {
+        if($this->hasScope('notallowed')){
+            $this->returnJson(array(
+                'status' => 'oh wow, you have access to a scope that doesn\' exist!'
+            ));
+        } else {
+            $this->returnError(new \Exception('You do not have the required scope: notallowed.',403),403);
+        }
     }
 
     private function setToken($token)
@@ -61,6 +82,15 @@ class ApiController extends Controller
     public function getToken()
     {
         return isset($this->_token) ? $this->_token : array();
+    }
+
+    public function hasScope($req_scope)
+    {
+        $allowed_scopes = explode(' ',$this->_token['scope']);
+        if(!in_array($req_scope,$allowed_scopes)){
+            return false;
+        }
+        return true;
     }
 
     public function filterValidateOauthToken($filterChain)

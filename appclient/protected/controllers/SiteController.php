@@ -39,6 +39,7 @@ class SiteController extends Controller
                 'token_info' => $this->apiGetTokenInfo(),
                 'profile' => $this->apiGetProfile(),
                 'documents' => $this->apiGetDocuments(),
+                'not_allowed' => $this->apiNotAllowed(),
                 'invalid_token' => $this->apiInvalidToken(),
             ));
         }
@@ -72,7 +73,7 @@ class SiteController extends Controller
             if($response->isSuccessful()){
                 return $response->json();
             } else {
-                return $response->getBody();
+                return json_decode($response->getBody(true),true);
             }
         }
     }
@@ -91,7 +92,7 @@ class SiteController extends Controller
             if($response->isSuccessful()){
                 return $response->json();
             } else {
-                return $response->getBody();
+                return json_decode($response->getBody(true),true);
             }
         }
     }
@@ -110,7 +111,26 @@ class SiteController extends Controller
             if($response->isSuccessful()){
                 return $response->json();
             } else {
-                return $response->getBody();
+                return json_decode($response->getBody(true),true);
+            }
+        }
+    }
+
+    public function apiNotAllowed()
+    {
+        if(!Yii::app()->user->isGuest && isset(Yii::app()->user->access_token)){
+            $url = Yii::app()->params['oauth']['api_url'] . '/notAllowed';
+            $response = Guzzle::get($url, array(
+                    'headers' => array(
+                        'Accept' => 'application/json',
+                        'Authorization' => 'Bearer '.Yii::app()->user->access_token,
+                    ),
+                    'exceptions' => false,
+                ));
+            if($response->isSuccessful()){
+                return $response->json();
+            } else {
+                return json_decode($response->getBody(true),true);
             }
         }
     }

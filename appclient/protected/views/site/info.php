@@ -14,6 +14,10 @@
     <pre style="background-color: #d3d3d3; padding: 10px;"><?php echo print_r($documents,true); ?></pre>
 </p>
 <p>
+    <strong>Valid token, but API that requires scope I don't have:</strong><br />
+<pre style="background-color: #d3d3d3; padding: 10px;"><?php echo print_r($not_allowed,true); ?></pre>
+</p>
+<p>
     <strong>Invalid Access Token Request:</strong><br />
     <pre style="background-color: #d3d3d3; padding: 10px;"><?php echo print_r($invalid_token,true); ?></pre>
 </p>
