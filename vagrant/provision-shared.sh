@@ -7,7 +7,7 @@ if [ ! -e /etc/yum.repos.d/epel.repo ]; then
 fi
 
 # Install Apache and PHP (and any needed extensions).
-pkgs=( git httpd php php-pdo php-xml )
+pkgs=( git svn httpd php php-pdo php-xml php-mcrypt php-xml php-mbstring )
 for i in "${pkgs[@]}"
 do
     if rpm -qa | grep -q $i; then
@@ -37,14 +37,12 @@ if grep -q "oauth.local" /etc/hosts; then
     echo "hosts file already updated"
 else
     echo "Updating hosts file..."
-    sudo echo "192.168.55.11 oauth.local" >> /etc/hosts
-    sudo echo "192.168.55.10 saml.local" >> /etc/hosts
-    sudo echo "127.0.0.1 demo.local appclient.local appserver.local" >> /etc/hosts
+    sudo echo "127.0.0.1 oauth.local saml.local appserver.local appclient.local demo.local" >> /etc/hosts
 fi
 
 # Retrieve the composer dependencies.
 echo "Updating composer dependencies..."
-paths=("/var/www/appserver/" "/var/www/appclient")
+paths=("/var/www/appserver/" "/var/www/appclient" "/var/www/php-oauth/" "/var/www/simplesamlphp/")
 for i in "${paths[@]}"
 do
     cd $i
@@ -67,13 +65,41 @@ do
     fi
 done
 
-
-# Copy the conf file to where Apache will find it.
-echo "Copying vhost configuration"
-sudo cp /vagrant/vhost-demo.local.conf /etc/httpd/conf.d/
+# Copy the vhost conf file to where Apache will find it.
+sudo cp /vagrant/vhost-local.conf /etc/httpd/conf.d/
 
 # Adjust the mode settings on that conf file.
-sudo chmod 644 /etc/httpd/conf.d/vhost-demo.local.conf
+sudo chmod 644 /etc/httpd/conf.d/vhost-local.conf
+
+# Run php-oauth config script if config doesnt exist yet
+if [ ! -f /var/www/php-oauth/config/oauth.ini ]
+then
+    echo "Running php-oauth configure script"
+    sudo /var/www/php-oauth/docs/configure.sh
+fi
+
+if [ ! -d /var/www/php-oauth/data ]
+then
+    echo "Creating php-oauth/data directories"
+    sudo mkdir -p /var/www/php-oauth/data
+    sudo mkdir -p /var/www/php-oauth/data/logs
+    sudo chmod -R 777 /var/www/php-oauth/data
+fi
+
+# Initialize php-oauth database if doesnt exist yet
+if [ ! -f /var/www/php-oauth/data/oauth2.sqlite ]
+then
+    echo "Initializing php-oauth database"
+    sudo php /var/www/php-oauth/docs/initOAuthDatabase.php
+    sudo php /var/www/php-oauth/docs/registerClients.php /var/www/php-oauth/docs/myregistration.json
+fi
+
+# Create symlink for simplesaml
+if [ ! -L /var/www/php-oauth/www/simplesaml ]
+then
+    echo "Creating symlink for simplesaml"
+    sudo ln -s /var/www/simplesamlphp/www/ /var/www/php-oauth/www/simplesaml
+fi
 
 # Restart Apache.
 echo "Restarting apache"
