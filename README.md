@@ -25,3 +25,31 @@ to the appserver.local host.
     192.168.55.10 saml.local
     192.168.55.11 oauth.local
     192.168.55.12 demo.local appserver.local appclient.local
+
+
+### Web Sequence Diagram ###
+[View Image](http://goo.gl/VtnSsg)
+
+
+    title OAuth 2.0 with simpleSAMLphp
+
+    participant Resource Owner (User) as User
+    participant Client Application (appclient) as Client
+    participant Resource Server (appserver) as Server
+    participant Authorization Server (php-oauth) as AuthZ
+    participant Authentication Server (SAML) as AuthN
+
+    User->Client: Click Login
+    Client->AuthZ: OAuth Auth Request
+    AuthZ->AuthN: Send User to login
+    AuthN->AuthZ: Authenticated, \nSAML attrs included
+    AuthZ->Client: Token Request Code
+    Client->AuthZ: Request Access Token
+    AuthZ->Client: Access Token
+    User->Client: Attempt to \nAccess Something
+    Client->Server: API Request for Something \nIncluding Bearer Token
+    Server->AuthZ: Validate Bearer Token \nand Scopes
+    AuthZ->Server: Token Information \nIncluding Scopes
+    Server->Client: Token/Scope verified, \nSomething returned
+    Client->User: Display Something
+
