@@ -8,10 +8,10 @@ This project uses Vagrant with VirtualBox to setup local servers and install the
 to do to test this out is:
 
 1. Clone this repo
-2. From the command line, go to the vagrant folder in the repo
-3. Add the following entries to your hosts file
+2. See block below for ```/etc/hosts``` file entry and add that line to your ```/etc/hosts``` file
+3. From the command line, go to the ```vagrant/``` folder in the repo
 4. Run ```vagrant up```
-5. Once vagrant is done spinning up the three virtual machines, open your browser and go to
+5. Once vagrant is done spinning up the virtual machine, open your browser and go to
 [http://appclient.local/](http://appclient.local/)
 6. You should see a simple page, click the Login link in the header and you should be redirected to login and grant
 access.
@@ -22,9 +22,7 @@ to the appserver.local host.
 
     # /etc/hosts
     # OAuth POC hosts
-    192.168.55.10 saml.local
-    192.168.55.11 oauth.local
-    192.168.55.12 demo.local appserver.local appclient.local
+    192.168.55.10 saml.local oauth.local demo.local appserver.local appclient.local
 
 
 ### Web Sequence Diagram ###
