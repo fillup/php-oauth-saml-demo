@@ -26,28 +26,45 @@ to the appserver.local host.
 
 
 ### Web Sequence Diagram ###
-[View Image](http://goo.gl/VtnSsg)
+[View Image](http://goo.gl/TuQZAd)
 
 
     title OAuth 2.0 with simpleSAMLphp
 
     participant Resource Owner (User) as User
     participant Client Application (appclient) as Client
-    participant Resource Server (appserver) as Server
+    participant Resource Server 1 (appserver) as Server1
     participant Authorization Server (php-oauth) as AuthZ
     participant Authentication Server (SAML) as AuthN
 
+    note right of User
+    Solid lines are browser based calls.
+    end note
+
     User->Client: Click Login
-    Client->AuthZ: OAuth Auth Request
-    AuthZ->AuthN: Send User to login
-    AuthN->AuthZ: Authenticated, \nSAML attrs included
-    AuthZ->Client: Token Request Code
-    Client->AuthZ: Request Access Token
-    AuthZ->Client: Access Token
-    User->Client: Attempt to \nAccess Something
-    Client->Server: API Request for Something \nIncluding Bearer Token
-    Server->AuthZ: Validate Bearer Token \nand Scopes
-    AuthZ->Server: Token Information \nIncluding Scopes
-    Server->Client: Token/Scope verified, \nSomething returned
+    Client->AuthZ: Redirect user to OAuth Auth Request
+    AuthZ->AuthN: Redirect User to\nlogin via SAML
+    AuthN->AuthZ: Authenticated,\nSAML attrs included
+    AuthZ->User: Prompt to grant access to requested scopes
+    User->AuthZ: Access Granted
+    AuthZ->Client: Redirect user to Client with Token Request Code
+
+    note over Server1
+    Dashed lines are server to server API calls.
+    end note
+
+    Client-->AuthZ: Request Access Token
+    AuthZ-->Client: Access Token
+    User->Client: Attempt to\nAccess Something
+    Client-->Server1: API Request for Something \nIncluding Bearer Token
+    Server1-->AuthZ: Validate Bearer Token\nand Scopes
+    AuthZ-->Server1: Token Information\nIncluding Scopes
+    Server1-->Client: Token/Scope verified,\nSomething returned
     Client->User: Display Something
+
+
+
+
+
+
 
