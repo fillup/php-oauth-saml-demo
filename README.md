@@ -26,7 +26,7 @@ to the appserver.local host.
 
 
 ### Web Sequence Diagram ###
-[View Image](http://goo.gl/TuQZAd)
+[View Image](http://goo.gl/7nxMtv)
 
 
     title OAuth 2.0 with simpleSAMLphp
@@ -42,12 +42,16 @@ to the appserver.local host.
     end note
 
     User->Client: Click Login
-    Client->AuthZ: Redirect user to OAuth Auth Request
-    AuthZ->AuthN: Redirect User to\nlogin via SAML
-    AuthN->AuthZ: Authenticated,\nSAML attrs included
+    Client->User: Redirect user to OAuth Auth Request
+    User->AuthZ: Route to login url
+    AuthZ->User: Redirect User to\nlogin via SAML
+    User->AuthN: Login via SAML
+    AuthN->User: Redirect to OAuth Server
+    User->AuthZ: Authenticated,\nSAML attrs included
     AuthZ->User: Prompt to grant access to requested scopes
     User->AuthZ: Access Granted
-    AuthZ->Client: Redirect user to Client with Token Request Code
+    AuthZ->User: Redirect user to Client with Token Request Code
+    User->Client: Successfully logged in,\nAuth Code included
 
     note over Server1
     Dashed lines are server to server API calls.
@@ -61,6 +65,9 @@ to the appserver.local host.
     AuthZ-->Server1: Token Information\nIncluding Scopes
     Server1-->Client: Token/Scope verified,\nSomething returned
     Client->User: Display Something
+
+
+
 
 
 
