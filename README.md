@@ -25,7 +25,8 @@ to the appserver.local host.
     192.168.55.10 saml.local oauth.local demo.local appserver.local appclient.local
 
 
-### Web Sequence Diagram ###
+## Web Sequence Diagrams ##
+### Standard Flow ###
 [View Image](http://goo.gl/7nxMtv)
 
 
@@ -66,6 +67,65 @@ to the appserver.local host.
     Server1-->Client: Token/Scope verified,\nSomething returned
     Client->User: Display Something
 
+
+### Two Resource Servers and Progressive Scoping ###
+[View Image](http://goo.gl/QnGV6i)
+
+    title OAuth 2.0 with simpleSAMLphp - Two Resource Servers and Progressive Scoping
+
+    participant Resource Owner (User) as User
+    participant Client Application as Client
+    participant Resource Server 1 as Server1
+    participant Resource Server 2 as Server2
+    participant Authorization Server (php-oauth) as AuthZ
+    participant Authentication Server (SAML) as AuthN
+
+    note right of User
+    Solid lines are browser based calls.
+    end note
+
+    User->Client: Click Login
+    Client->User: Redirect user to OAuth Auth Request
+    User->AuthZ: Route to login url
+    AuthZ->User: Redirect User to login via SAML
+    User->AuthN: Login via SAML
+    AuthN->User: Redirect to OAuth Server
+    User->AuthZ: Authenticated, SAML attrs included
+    AuthZ->User: Prompt to grant access to requested scopes
+    User->AuthZ: Access Granted
+    AuthZ->User: Redirect user to Client with Token Request Code
+    User->Client: Successfully logged in,\nAuth Code included
+
+    note over Server1
+    Dashed lines are server to server API calls.
+    end note
+
+    Client-->AuthZ: Request Access Token
+    AuthZ-->Client: Access Token
+    User->Client: Attempt to\nAccess Something
+    Client-->Server1: API Request for Something \nIncluding Bearer Token
+    Server1-->AuthZ: Validate Bearer Token\nand Scopes
+    AuthZ-->Server1: Token Information\nIncluding Scopes
+    Server1-->Client: Token/Scope verified,\nSomething returned
+    Client->User: Display Something
+
+    User->Client: Access Something Else
+    Client->User: Redirect user to request access
+    User->AuthZ: Login request for new scope
+    AuthZ->User: Redirect User to login via SAML
+    User->AuthN: Login via SAML
+    AuthN->User: Redirect to OAuth Server
+    User->AuthZ: Authenticated, SAML attrs Included
+    AuthZ->User: Prompt to grant access to requested scopes
+    AuthZ->User: Redirect user to Client with Token Request Code
+    User->Client: Successfully logged in\nAuth Code Included
+    Client-->AuthZ: Request Access Token
+    AuthZ-->Client: Access Token
+    Client-->Server2: API Request for Something Else\nIncluding Bearer Token
+    Server2-->AuthZ: Validate Bearer Token\nand Scopes
+    AuthZ-->Server2: Token Information\nIncluding Scopes
+    Server2-->Client: Token/Scope verified,\nSomething Else returned
+    Client->User: Display Something Else
 
 
 
